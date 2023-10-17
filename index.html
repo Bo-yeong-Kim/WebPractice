@@ -31,17 +31,21 @@
         });
 
         Instascan.Camera.getCameras().then(function (cameras) {
-            let rearCamera = cameras.find(camera => camera.name.includes('back'));
-            if (rearCamera) {
-                scanner.start(rearCamera);
-            } else if (cameras.length > 0) {
-                scanner.start(cameras[0]);
-            } else {
-                console.error('후면 카메라를 찾을 수 없습니다.');
-            }
-        }).catch(function (e) {
-            console.error(e);
-        });
+    // 후면 카메라 찾기
+    let rearCamera = cameras.find(camera => camera.name.includes('back'));
+
+    if (rearCamera) {
+        // 후면 카메라가 사용 가능한 경우
+        scanner.start(rearCamera);
+    } else if (cameras.length > 0) {
+        // 후면 카메라가 없는 경우, 첫 번째 카메라를 사용
+        scanner.start(cameras[0]);
+    } else {
+        console.error('후면 카메라를 찾을 수 없습니다.');
+    }
+}).catch(function (e) {
+    console.error(e);
+});
 
         function isValidURL(str) {
             // URL 형식 확인을 위한 정규식 사용
