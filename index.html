@@ -9,7 +9,7 @@
     <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
     <script>
         // QR 코드 스캐너 인스턴스 생성
-        const scanner = new Instascan.Scanner({ video: document.getElementById('qr-video') });
+        const scanner = new Instascan.Scanner({ video: document.getElementById('qr-video'), mirror: false });
 
         scanner.addListener('scan', function (content) {
             // QR 코드 스캔 결과를 content로 받습니다.
@@ -24,10 +24,13 @@
         });
 
         Instascan.Camera.getCameras().then(function (cameras) {
-            if (cameras.length > 0) {
+            let rearCamera = cameras.find(camera => camera.name.includes('back'));
+            if (rearCamera) {
+                scanner.start(rearCamera);
+            } else if (cameras.length > 0) {
                 scanner.start(cameras[0]);
             } else {
-                console.error('카메라를 찾을 수 없습니다.');
+                console.error('후면 카메라를 찾을 수 없습니다.');
             }
         }).catch(function (e) {
             console.error(e);
@@ -41,3 +44,4 @@
     </script>
 </body>
 </html>
+
