@@ -15,6 +15,20 @@
             position: absolute;
             top: 0;
             left: 0;
+            z-index: 1;
+        }
+
+        h1 {
+            position: fixed;
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 28px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 2;
         }
 
         button {
@@ -30,6 +44,7 @@
             font-size: 20px;
             cursor: pointer;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 2;
         }
 
         button:hover {
@@ -40,10 +55,11 @@
 
 <body>
 
+<h1>QR 코드 스캔</h1>
 <div>
     <video id="video"></video>
 </div>
-<button onclick="scanQRCode()">Start Scanning</button>
+<button onclick="scanQRCode()">스캔하기</button>
 
 <script>
     let selectedDeviceId;
