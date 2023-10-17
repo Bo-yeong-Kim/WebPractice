@@ -9,8 +9,31 @@
     <script src="https://unpkg.com/@zxing/library@0.18.6/umd/index.min.js"></script>
     <style>
         #video {
-            border: 1px solid black;
-            margin-top: 20px;
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        button {
+            position: fixed;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        button:hover {
+            background-color: #1976D2;
         }
     </style>
 </head>
@@ -18,7 +41,7 @@
 <body>
 
 <div>
-    <video id="video" width="300" height="200"></video>
+    <video id="video"></video>
 </div>
 <button onclick="scanQRCode()">Start Scanning</button>
 
@@ -28,34 +51,34 @@
     const codeReader = new ZXing.BrowserQRCodeReader();
 
     function scanQRCode() {
-    codeReader
-        .getVideoInputDevices()
-        .then(videoInputDevices => {
-            // 후면 카메라 선택
-            const rearCamera = videoInputDevices.find(device => device.label.toLowerCase().includes('back'));
-            if (rearCamera) {
-                selectedDeviceId = rearCamera.deviceId;
-            } else if (videoInputDevices.length >= 1) {
-                selectedDeviceId = videoInputDevices[0].deviceId;
-            }
-            
-            codeReader.reset();
-            codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) => {
-                console.log(result);
-                const url = result.text;
-                if (url) {
-                    if (confirm("인식된 QR코드에 URL이 있습니다. 여시겠습니까?\n" + url)) {
-                        window.open(url, "_blank");
-                    }
+        codeReader
+            .getVideoInputDevices()
+            .then(videoInputDevices => {
+                // 후면 카메라 선택
+                const rearCamera = videoInputDevices.find(device => device.label.toLowerCase().includes('back'));
+                if (rearCamera) {
+                    selectedDeviceId = rearCamera.deviceId;
+                } else if (videoInputDevices.length >= 1) {
+                    selectedDeviceId = videoInputDevices[0].deviceId;
                 }
-            }).catch((err) => {
+                
+                codeReader.reset();
+                codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) => {
+                    console.log(result);
+                    const url = result.text;
+                    if (url) {
+                        if (confirm("인식된 QR코드에 URL이 있습니다. 여시겠습니까?\n" + url)) {
+                            window.open(url, "_blank");
+                        }
+                    }
+                }).catch((err) => {
+                    console.error(err);
+                });
+            })
+            .catch((err) => {
                 console.error(err);
             });
-        })
-        .catch((err) => {
-            console.error(err);
-        });
-}
+    }
 
     // Stop the QR Code Reader when you navigate away from the page
     window.addEventListener('beforeunload', (event) => {
